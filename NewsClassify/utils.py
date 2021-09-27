@@ -1,9 +1,11 @@
+import os
 import re
 from nltk.stem.snowball import SnowballStemmer
 from collections import Counter
+import config
 
 stemmer = SnowballStemmer("english")
-with open('stopWords.txt', 'r') as f:
+with open(os.path.join(config.projectPath, 'stopWords.txt'), 'r') as f:
     # 停用词
     stopWords = f.read().splitlines()
 
