@@ -2,38 +2,56 @@ import numpy as np
 import pickle
 import utils
 import config
+import matplotlib.pyplot as plt
 
 
-def printPRF(path, x, y):
-    pTrain = []
-    rTrain = []
-    fTrain = []
-    pTest = []
-    rTest = []
-    fTest = []
+def performance(path, x, y, clsNum):
+    cTrain = np.zeros((clsNum, clsNum))
+    cTest = np.zeros((clsNum, clsNum))
+    pTrain = 0
+    rTrain = 0
+    fTrain = 0
+    pTest = 0
+    rTest = 0
+    fTest = 0
     for i in range(config.fold):
         with open(path + str(i) + '.p', "rb") as file:
             clf = pickle.load(file)
         yPred = clf.predict(x)
-        p, r, f = utils.evaluate(y[pos[i][0]], yPred[pos[i][0]], 20)
-        pTrain.append(p)
-        rTrain.append(r)
-        fTrain.append(f)
+        c, p, r, f = utils.evaluate(y[pos[i][0]], yPred[pos[i][0]], clsNum)
+        cTrain += c
+        pTrain += p / config.fold
+        rTrain += r / config.fold
+        fTrain += f / config.fold
 
-        p, r, f = utils.evaluate(y[pos[i][1]], yPred[pos[i][1]], 20)
-        pTest.append(p)
-        rTest.append(r)
-        fTest.append(f)
+        c, p, r, f = utils.evaluate(y[pos[i][1]], yPred[pos[i][1]], clsNum)
+        cTest += c
+        pTest += p / config.fold
+        rTest += r / config.fold
+        fTest += f / config.fold
 
-    print("p")
-    print(np.mean(pTrain))
-    print(np.mean(pTest))
-    print("r")
-    print(np.mean(rTrain))
-    print(np.mean(rTest))
-    print("f")
-    print(np.mean(fTrain))
-    print(np.mean(fTest))
+    plt.figure()
+    plt.title("Train:" + str(fTrain))
+    plt.xticks(list(range(20)))
+    plt.yticks(list(range(20)))
+    plt.imshow(cTrain, cmap="Blues")
+    plt.colorbar()
+    plt.figure()
+    plt.title("Test:" + str(fTest))
+    plt.xticks(list(range(20)))
+    plt.yticks(list(range(20)))
+    plt.imshow(cTest, cmap="Blues")
+    plt.colorbar()
+    plt.show()
+    print("precision")
+    print(pTrain)
+    print(pTest)
+    print("recall")
+    print(rTrain)
+    print(rTest)
+    print("F1")
+    print(fTrain)
+    print(fTest)
 
 
 print("Load")
@@ -46,7 +64,7 @@ print("Test")
 pos = utils.validFold(c.shape[0], config.fold)
 
 print("NB")
-printPRF("weight/NB/NB", c, y)
+performance("weight/NB/NB", c, y, 20)
 
 print("NN")
-printPRF("weight/NN/NN", x, y)
+performance("weight/NN/NN", x, y, 20)

@@ -80,7 +80,7 @@ def evaluate(yTrue, yPred, clsNum):
     matrix = confusion_matrix(yTrue, yPred, clsNum)
     p, r = PR(matrix)
     f = F1(p, r)
-    return np.mean(p), np.mean(r), np.mean(f)
+    return matrix, np.mean(p), np.mean(r), np.mean(f)
 
 
 def validFold(fileNum, fold=5):
