@@ -1,5 +1,7 @@
 .idea/
 __pycache__/
 data/
+weight/
 image/
 try.py
+try.ipynb

@@ -18,8 +18,9 @@ if __name__ == "__main__":
             idfCountThres[key] = value
     featureNum = len(idfCountThres)
     fileNum = config.fileNum
-    x = np.zeros((fileNum, featureNum + 1))  # 词数为最后一个特征
-    y = np.zeros((fileNum, 1))
+    x = np.zeros((fileNum, featureNum))
+    c = np.zeros((fileNum, featureNum))
+    y = np.zeros(fileNum)
 
     dataPath = config.dataPath
     i = 0
@@ -35,11 +36,12 @@ if __name__ == "__main__":
             j = 0
             for key, value in sorted(idfCountThres.items(), key=lambda x: x[1]):
                 if key in fileCount:
-                    x[i, j] = (fileCount[key] / total) * np.log10(fileNum / value) * 1e5
+                    x[i, j] = (fileCount[key] / total) * np.log10(fileNum / value)
+                    c[i, j] = fileCount[key]
                 j += 1
-            x[i, j] = total / 10
             i += 1
         print(i)
 
     np.save(r'../data/x.npy', x)
+    np.save(r'../data/c.npy', c)
     np.save(r'../data/y.npy', y)

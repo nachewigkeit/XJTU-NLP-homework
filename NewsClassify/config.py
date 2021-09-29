@@ -8,3 +8,4 @@ clsDict = {'alt.atheism': 0, 'comp.graphics': 1, 'comp.os.ms-windows.misc': 2, '
 
 numThres = 5
 fileNum = 19997
+fold = 5
