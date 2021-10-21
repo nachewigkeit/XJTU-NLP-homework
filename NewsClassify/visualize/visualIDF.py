@@ -15,6 +15,5 @@ print("<=4:", np.sum(idfCount <= 4))
 print(">=5:", np.sum(idfCount >= 5))
 
 plt.axes(yscale="log")
-plt.title("idf")
-plt.hist(idfCount, range=(0, 10))
+plt.hist(idfCount)
 plt.show()
