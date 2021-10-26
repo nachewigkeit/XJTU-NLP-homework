@@ -6,13 +6,8 @@ import utils
 with open(config.newTextPath, "r", encoding="utf-8") as f:
     lines = f.readlines()
 
-newText, newVec = utils.lines2data(lines)
-print(newVec.shape)
+tar = list(range(1, 17))
+answers = utils.duplicateCheck(lines, tar, 0.8, 3)
 
-scores = np.dot(utils.database['vec'], newVec.T)
-pos = np.argmax(scores, axis=0)
-for i in range(len(pos)):
-    if scores[pos[i], i] > 0.9:
-        print(newText[i])
-        print(utils.database['text'][pos[i]])
-        print(scores[pos[i], i])
+for answer in answers:
+    print(answer)
