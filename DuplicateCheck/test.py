@@ -12,6 +12,7 @@ print(newVec.shape)
 scores = np.dot(utils.database['vec'], newVec.T)
 pos = np.argmax(scores, axis=0)
 for i in range(len(pos)):
-    print(newText[i])
-    print(utils.database['text'][pos[i]])
-    print(scores[pos[i], i])
+    if scores[pos[i], i] > 0.9:
+        print(newText[i])
+        print(utils.database['text'][pos[i]])
+        print(scores[pos[i], i])

@@ -8,7 +8,7 @@ import pickle
 from time import time
 
 start = time()
-model = SentenceTransformer('multi-qa-MiniLM-L6-cos-v1')
+model = SentenceTransformer('distiluse-base-multilingual-cased-v1')
 model = model.cuda()
 print("model load time:", time() - start)
 start = time()
