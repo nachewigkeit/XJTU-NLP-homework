@@ -20,16 +20,18 @@ for s in tqdm(range(epoch)):
     # count
     for k in sents:
         cnSent, enSent = k
-
+        oneDistortion = distortion[(len(cnSent), len(enSent))]
         for i in range(len(enSent)):
             sum = 0
+            en = enSent[i]
+            delta = np.zeros(len(cnSent))
             for j in range(len(cnSent)):
-                sum += translation[cnSent[j]][enSent[i]][1] * distortion[(len(cnSent), len(enSent))][j, i, 1]
+                delta[j] = translation[cnSent[j]][en][1] * oneDistortion[j, i, 1]
 
+            delta /= delta.sum()
+            oneDistortion[:, i, 0] += delta
             for j in range(len(cnSent)):
-                delta = translation[cnSent[j]][enSent[i]][1] * distortion[(len(cnSent), len(enSent))][j, i, 1] / sum
-                translation[cnSent[j]][enSent[i]][0] += delta
-                distortion[(len(cnSent), len(enSent))][j, i, 0] += delta
+                translation[cnSent[j]][en][0] += delta[j]
 
     # update
     for cn in translation.values():
@@ -44,13 +46,17 @@ for s in tqdm(range(epoch)):
         distort[:, :, 1] = distort[:, :, 0] / np.sum(distort[:, :, 0], axis=0)
         distort[:, :, 0] = 0
 
+    # visualize
     for k in range(len(sents)):
         cnSent, enSent = sents[k]
+        oneDistortion = distortion[(len(cnSent), len(enSent))]
         for i in range(len(enSent)):
             maxProb = -1
+            en = enSent[i]
             for j in range(len(cnSent)):
-                if translation[cnSent[j]][enSent[i]][1] * distortion[(len(cnSent), len(enSent))][j, i, 1] > maxProb:
-                    maxProb = translation[cnSent[j]][enSent[i]][1] * distortion[(len(cnSent), len(enSent))][j, i, 1]
+                prob = translation[cnSent[j]][en][1] * oneDistortion[j, i, 1]
+                if prob > maxProb:
+                    maxProb = prob
                     maxWord = j
             text[k][s, i] = maxWord
 

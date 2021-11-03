@@ -14,6 +14,7 @@ for k in sents:
     text.append(np.zeros((epoch, len(k[1])), dtype=np.int))
 
 for s in tqdm(range(epoch)):
+    # count
     for k in sents:
         cnSent, enSent = k
 
@@ -26,6 +27,7 @@ for s in tqdm(range(epoch)):
                 delta = translation[j][i][1] / sum
                 translation[j][i][0] += delta
 
+    # update
     for cn in translation.values():
         sum = 0
         for en in cn.values():
@@ -34,6 +36,7 @@ for s in tqdm(range(epoch)):
             en[1] = en[0] / sum
             en[0] = 0
 
+    # visualize
     for k in range(len(sents)):
         cnSent, enSent = sents[k]
         for i in range(len(enSent)):
